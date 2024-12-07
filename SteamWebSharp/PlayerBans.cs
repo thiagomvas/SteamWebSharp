@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SteamWebSharp;
+﻿namespace SteamWebSharp;
 public record PlayerBans
 {
     public ulong SteamId { get; set; }
