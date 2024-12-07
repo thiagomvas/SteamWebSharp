@@ -21,4 +21,37 @@ internal class SteamUserStatsEndpoints : ISteamUserStats
         var response = await _client.GetAsync<GetNumberOfCurrentPlayersResponse>(url);
         return response.player_count;
     }
+
+    public async Task<GameSchema> GetSchemaForGameAsync(int appId)
+    {
+        var url = $"/ISteamUserStats/GetSchemaForGame/v2?key={_client.ApiKey}&appid={appId}";
+        var response = await _client.GetAsync<GetSchemaForGameResponse>(url);
+        return new GameSchema
+        {
+            Name = response.GameName,
+            Version = response.GameVersion,
+            Achievements = response.AvailableGameStats.Achievements.Select(a =>
+            {
+                return new GameAchievement
+                {
+                    ApiName = a.Name,
+                    DisplayName = a.DisplayName,
+                    Description = a.Description,
+                    Icon = a.Icon,
+                    IconGray = a.IconGray,
+                    IsHidden = a.Hidden == 1,
+                };
+            }).ToArray(),
+            Stats = response.AvailableGameStats.Stats.Select(s =>
+            {
+                return new GameStat
+                {
+                    ApiName = s.Name,
+                    DisplayName = s.DisplayName,
+                    DefaultValue = s.DefaultValue
+                };
+            }).ToArray(),
+
+        };
+    }
 }

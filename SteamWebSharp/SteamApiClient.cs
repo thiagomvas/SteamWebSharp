@@ -11,6 +11,8 @@ public class SteamApiClient
     protected readonly HttpClient _httpClient;
     protected readonly string _apiKey;
 
+    internal string ApiKey => _apiKey;
+
     public ISteamUser ISteamUser { get; }
     public ISteamUserStats ISteamUserStats { get; }
     public SteamApiClient(string apiKey)

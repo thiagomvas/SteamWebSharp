@@ -24,6 +24,11 @@ internal class Utils
             return JsonSerializer.Deserialize<T>(responseElement.GetRawText(), _options);
         }
 
+        if(root.TryGetProperty("game", out var gameElement))
+        {
+            return JsonSerializer.Deserialize<T>(gameElement.GetRawText(), _options);
+        }
+
         return JsonSerializer.Deserialize<T>(root.GetRawText(), _options);
 
         //if (root.TryGetProperty("players", out var playersElement) && playersElement.GetArrayLength() > 0)
