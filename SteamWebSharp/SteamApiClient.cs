@@ -31,7 +31,24 @@ public class SteamApiClient : ISteamUser
     {
         var url = $"{_baseUrl}/ISteamUser/GetPlayerBans/v1/?key={_apiKey}&steamids={steamId}";
         var response = await _httpClient.GetStringAsync(url);
-        return Utils.ExtractResponse<PlayerBans>(response);
+        var result = Utils.ExtractResponse<GetPlayerBansResponse>(response);
+        var player = result.Players.FirstOrDefault();
+
+        if (player != null)
+        {
+            return new PlayerBans
+            {
+                SteamId = ulong.Parse(player.SteamId),
+                CommunityBanned = player.CommunityBanned,
+                VACBanned = player.VACBanned,
+                NumberOfVACBans = player.NumberOfVACBans,
+                DaysSinceLastBan = player.DaysSinceLastBan,
+                NumberOfGameBans = player.NumberOfGameBans,
+                EconomyBan = player.EconomyBan
+            };
+        }
+
+        return null;
     }
 
     public async Task<IEnumerable<Friend>> GetFriendListAsync(ulong steamId)
@@ -89,5 +106,51 @@ public class SteamApiClient : ISteamUser
             LocCityId = user.loccityid
         };
 
+    }
+
+    public async Task<IEnumerable<PlayerBans>> GetPlayerBansAsync(IEnumerable<ulong> steamIds)
+    {
+        var url = $"{_baseUrl}/ISteamUser/GetPlayerBans/v1/?key={_apiKey}&steamids={string.Join(",", steamIds)}";
+        var response = await _httpClient.GetStringAsync(url);
+        var result = Utils.ExtractResponse<GetPlayerBansResponse>(response);
+
+        return result.Players.Select(p => new PlayerBans
+        {
+            SteamId = ulong.Parse(p.SteamId),
+            CommunityBanned = p.CommunityBanned,
+            VACBanned = p.VACBanned,
+            NumberOfVACBans = p.NumberOfVACBans,
+            DaysSinceLastBan = p.DaysSinceLastBan,
+            NumberOfGameBans = p.NumberOfGameBans,
+            EconomyBan = p.EconomyBan
+        });
+    }
+
+    public async Task<IEnumerable<PlayerSummary>> GetPlayerSummariesAsync(IEnumerable<ulong> steamIds)
+    {
+        var url = $"{_baseUrl}/ISteamUser/GetPlayerSummaries/v2/?key={_apiKey}&steamids={string.Join(",", steamIds)}";
+        var response = await _httpClient.GetStringAsync(url);
+        var result = Utils.ExtractResponse<GetPlayerSummariesResponse>(response);
+
+        return result.players.Select(user => new PlayerSummary
+        {
+            SteamId = ulong.Parse(user.steamid),
+            PersonaName = user.personaname,
+            ProfileUrl = user.profileurl,
+            Avatar = user.avatar,
+            AvatarMedium = user.avatarmedium,
+            AvatarFull = user.avatarfull,
+            PersonaState = (ProfileState)user.personastate,
+            CommunityVisibilityState = user.communityvisibilitystate,
+            ProfileState = user.profilestate,
+            LastLogOff = DateTimeOffset.FromUnixTimeSeconds(user.lastlogoff).DateTime,
+            RealName = user.realname,
+            PrimaryClanId = ulong.Parse(user.primaryclanid),
+            TimeCreated = DateTimeOffset.FromUnixTimeSeconds(user.timecreated).DateTime,
+            PersonaStateFlags = user.personastateflags,
+            LocCountryCode = user.loccountrycode,
+            LocStateCode = user.locstatecode,
+            LocCityId = user.loccityid
+        });
     }
 }

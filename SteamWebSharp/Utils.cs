@@ -29,18 +29,20 @@ internal class Utils
             return JsonSerializer.Deserialize<T>(responseElement.GetRawText(), _options);
         }
 
-        if (root.TryGetProperty("players", out var playersElement) && playersElement.GetArrayLength() > 0)
-        {
-            var firstPlayerElement = playersElement[0];
-            return JsonSerializer.Deserialize<T>(firstPlayerElement.GetRawText(), _options);
-        }
+        return JsonSerializer.Deserialize<T>(root.GetRawText(), _options);
 
-        if (root.TryGetProperty("friendslist", out var friendsListElement))
-        {
-            // Deserialize the "friends" array into the target type
-            return JsonSerializer.Deserialize<T>(friendsListElement.GetRawText(), _options);
-        }
+        //if (root.TryGetProperty("players", out var playersElement) && playersElement.GetArrayLength() > 0)
+        //{
+        //    var firstPlayerElement = playersElement[0];
+        //    return JsonSerializer.Deserialize<T>(playersElement.GetRawText(), _options);
+        //}
 
-        throw new InvalidOperationException("The response object is missing or invalid.");
+        //if (root.TryGetProperty("friendslist", out var friendsListElement))
+        //{
+        //    // Deserialize the "friends" array into the target type
+        //    return JsonSerializer.Deserialize<T>(friendsListElement.GetRawText(), _options);
+        //}
+
+        //throw new InvalidOperationException("The response object is missing or invalid.");
     }
 }

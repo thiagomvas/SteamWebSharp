@@ -4,10 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SteamWebSharp;
-public record PlayerBans
+namespace SteamWebSharp.DTOs;
+internal class GetPlayerBansResponse
 {
-    public ulong SteamId { get; set; }
+    public PlayerBansDto[] Players { get; set; }
+
+}
+
+internal class PlayerBansDto
+{
+    public string SteamId { get; set; }
     public bool CommunityBanned { get; set; }
     public bool VACBanned { get; set; }
     public int NumberOfVACBans { get; set; }
