@@ -12,8 +12,23 @@ public class SteamApiClient
     protected readonly string _apiKey;
     private readonly ISteamApiClientCacheProvider _cacheProvider;
 
+    /// <summary>
+    /// The default duration to cache responses for. Default is 5 minutes.
+    /// </summary>
     public TimeSpan DefaultCacheDuration { get; set; } = TimeSpan.FromMinutes(5);
+
+    /// <summary>
+    /// Whether to use the cache. Default is true.
+    /// </summary>
     public bool UseCache { get; set; } = true;
+
+    /// <summary>
+    /// The language to use for responses. Default is "english".
+    /// </summary>
+    /// <remarks>
+    /// This is passed directly as a query parameter to the Steam API. The available languages are defined by the Steam API.
+    /// </remarks>
+    public string Language { get; set; } = "english";
 
     internal string ApiKey => _apiKey;
 
@@ -40,7 +55,7 @@ public class SteamApiClient
 
     internal protected async Task<T> GetAsync<T>(string endpoint)
     {
-        var url = $"{endpoint}&key={_apiKey}";
+        var url = $"{endpoint}&key={_apiKey}&l={Language}";
         var cachedResult = _cacheProvider.Get<T>(url);
         if (cachedResult != null)
         {

@@ -25,6 +25,7 @@ internal class PlayerAchievementDto
     public string Name { get; set; }
     public int Achieved { get; set; }
     public ulong UnlockTime { get; set; }
+    public string Description { get; set; }
 }
 
 internal class PlayerStatDto

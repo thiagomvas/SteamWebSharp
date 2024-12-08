@@ -25,4 +25,6 @@ public record PlayerAchievement
     /// If it has been unlocked, the time it was unlocked, <see langword="null"/> otherwise.
     /// </summary>
     public DateTime? UnlockTime { get; set; }
+
+    public string Description { get; set; }
 }

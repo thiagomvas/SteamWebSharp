@@ -38,7 +38,9 @@ internal class SteamUserStatsEndpoints : ISteamUserStats
         {
             ApiName = a.ApiName,
             Achieved = a.Achieved == 1,
-            UnlockTime = a.UnlockTime > 0 ? DateTimeOffset.FromUnixTimeSeconds((long)a.UnlockTime).DateTime : null
+            UnlockTime = a.UnlockTime > 0 ? DateTimeOffset.FromUnixTimeSeconds((long)a.UnlockTime).DateTime : null,
+            Description = a.Description
+            
         });
     }
 

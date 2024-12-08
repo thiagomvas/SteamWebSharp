@@ -9,7 +9,7 @@ namespace SteamWebSharp;
 /// <summary>
 /// The schema of a game.
 /// </summary>
-public class GameSchema
+public record GameSchema
 {
     /// <summary>
     /// The name of the game.
