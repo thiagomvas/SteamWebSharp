@@ -30,6 +30,18 @@ internal class SteamUserStatsEndpoints : ISteamUserStats
         return response.player_count;
     }
 
+    public async Task<IEnumerable<PlayerAchievement>> GetPlayerAchievementsAsync(ulong steamId, int appId)
+    {
+        var url = $"/ISteamUserStats/GetPlayerAchievements/v1?steamid={steamId}&appid={appId}";
+        var response = await _client.GetAsync<GetPlayerAchievementsResponse>(url);
+        return response.PlayerStats.Achievements.Select(a => new PlayerAchievement
+        {
+            ApiName = a.ApiName,
+            Achieved = a.Achieved == 1,
+            UnlockTime = a.UnlockTime > 0 ? DateTimeOffset.FromUnixTimeSeconds((long)a.UnlockTime).DateTime : null
+        });
+    }
+
     public async Task<GameSchema> GetSchemaForGameAsync(int appId)
     {
         var url = $"/ISteamUserStats/GetSchemaForGame/v2?key={_client.ApiKey}&appid={appId}";
@@ -60,6 +72,37 @@ internal class SteamUserStatsEndpoints : ISteamUserStats
                 };
             }).ToArray(),
 
+        };
+    }
+
+    public async Task<PlayerStats> GetUserStatsForGameAsync(ulong steamId, int appId)
+    {
+        var url = $"/ISteamUserStats/GetUserStatsForGame/v2?steamid={steamId}&appid={appId}";
+        var response = await _client.GetAsync<GetUserStatsForGameResponse>(url);
+
+        return new PlayerStats
+        {
+            SteamId = ulong.Parse(response.PlayerStats.SteamId),
+            
+            GameName = response.PlayerStats.GameName,
+            Stats = response.PlayerStats.Stats.Select(s =>
+            {
+                return new PlayerStat
+                {
+                    ApiName = s.Name,
+                    Value = s.Value
+                };
+            }).ToArray(),
+            Achievements = response.PlayerStats.Achievements.Select(a =>
+            {
+                return new PlayerAchievement
+                {
+                    ApiName = a.Name,
+                    Achieved = a.Achieved == 1,
+                    UnlockTime = a.UnlockTime > 0 ? DateTimeOffset.FromUnixTimeSeconds((long)a.UnlockTime).DateTime : null
+                };
+            }).ToArray(),
+            Success = response.PlayerStats.Success
         };
     }
 }

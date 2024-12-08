@@ -27,4 +27,8 @@ public interface ISteamUserStats
 
     
     Task<IEnumerable<AchievementPercentage>> GetGlobalAchievementPercentagesForAppAsync(int appId);
+
+    Task<IEnumerable<PlayerAchievement>> GetPlayerAchievementsAsync(ulong steamId, int appId);
+
+    Task<PlayerStats> GetUserStatsForGameAsync(ulong steamId, int appId);
 }
