@@ -15,6 +15,14 @@ internal class SteamUserStatsEndpoints : ISteamUserStats
     {
         _client = client;
     }
+
+    public async Task<IEnumerable<AchievementPercentage>> GetGlobalAchievementPercentagesForAppAsync(int appId)
+    {
+        var url = $"/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2?gameid={appId}";
+        var response = await _client.GetAsync<GetGlobalAchievementPercentagesForAppResponse>(url);
+        return response.AchievementPercentages.achievements.Select(a => new AchievementPercentage() { ApiName = a.name, Percentage = a.percent});
+    }
+
     public async Task<int> GetNumberOfCurrentPlayersAsync(int appId)
     {
         var url = $"/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid={appId}";

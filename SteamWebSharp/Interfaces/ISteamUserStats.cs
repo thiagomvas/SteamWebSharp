@@ -24,4 +24,7 @@ public interface ISteamUserStats
     /// A <see cref="GameSchema"/> object containing the schema for the specified game.
     /// </returns>
     Task<GameSchema> GetSchemaForGameAsync(int appId);
+
+    
+    Task<IEnumerable<AchievementPercentage>> GetGlobalAchievementPercentagesForAppAsync(int appId);
 }
