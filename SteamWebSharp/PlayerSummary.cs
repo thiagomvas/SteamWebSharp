@@ -1,4 +1,8 @@
 ﻿namespace SteamWebSharp;
+
+/// <summary>
+/// Represents a player's summary.
+/// </summary>
 public record PlayerSummary
 {
     /// <summary>

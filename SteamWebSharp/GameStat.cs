@@ -5,9 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SteamWebSharp;
+
+/// <summary>
+/// Represents a game stat.
+/// </summary>
 public record GameStat
 {
-    public string ApiName { get; set; }
-    public string DisplayName { get; set; }
-    public int DefaultValue { get; set; }
+    /// <summary>
+    /// The API name of the stat.
+    /// </summary>
+    public string ApiName { get; init; }
+
+    /// <summary>
+    /// The display name of the stat.
+    /// </summary>
+    public string DisplayName { get; init; }
+
+    /// <summary>
+    /// The default value of the stat.
+    /// </summary>
+    public int DefaultValue { get; init; }
 }

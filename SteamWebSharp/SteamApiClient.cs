@@ -13,7 +13,14 @@ public class SteamApiClient
 
     internal string ApiKey => _apiKey;
 
+    /// <summary>
+    /// Endpoints for the ISteamUser interface.
+    /// </summary>
     public ISteamUser ISteamUser { get; }
+
+    /// <summary>
+    /// Endpoints for the ISteamUserStats interface.
+    /// </summary>
     public ISteamUserStats ISteamUserStats { get; }
     public SteamApiClient(string apiKey)
     {
