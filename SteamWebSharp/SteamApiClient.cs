@@ -1,4 +1,5 @@
-﻿using SteamWebSharp.DTOs;
+﻿using Microsoft.Extensions.Logging;
+using SteamWebSharp.DTOs;
 using SteamWebSharp.Interfaces;
 
 namespace SteamWebSharp;
@@ -11,6 +12,11 @@ public class SteamApiClient
     protected readonly HttpClient _httpClient;
     protected readonly string _apiKey;
     private readonly ISteamApiClientCacheProvider _cacheProvider;
+    private readonly ILogger<SteamApiClient>? _logger;
+    private ISteamUser _iSteamUser;
+    private ISteamUserStats _iSteamUserStats;
+    private ISteamNews _iSteamNews;
+    private ITeamFortress _iTeamFortress;
 
     /// <summary>
     /// The default duration to cache responses for. Default is 5 minutes.
@@ -30,34 +36,95 @@ public class SteamApiClient
     /// </remarks>
     public string Language { get; set; } = "english";
 
+    /// <summary>
+    /// Gets the API key.
+    /// </summary>
     internal string ApiKey => _apiKey;
 
     /// <summary>
-    /// Endpoints for the ISteamUser interface.
+    /// Gets or sets the ISteamUser provider.
     /// </summary>
-    public ISteamUser ISteamUser { get; }
+    public ISteamUser ISteamUser
+    {
+        get => _iSteamUser;
+        set
+        {
+            _logger?.LogInformation($"{nameof(ISteamUser)} provider set to {value.GetType().Name}");
+            _iSteamUser = value;
+        }
+    }
+
     /// <summary>
-    /// Endpoints for the ISteamUserStats interface.
+    /// Gets or sets the ISteamUserStats provider.
     /// </summary>
-    public ISteamUserStats ISteamUserStats { get; }
-    
-    public ISteamNews ISteamNews { get; }
-    public ITeamFortress ITeamFortress { get; }
+    public ISteamUserStats ISteamUserStats
+    {
+        get => _iSteamUserStats;
+        set
+        {
+            _logger?.LogInformation($"{nameof(ISteamUserStats)} provider set to {value.GetType().Name}");
+            _iSteamUserStats = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the ISteamNews provider.
+    /// </summary>
+    public ISteamNews ISteamNews
+    {
+        get => _iSteamNews;
+        set
+        {
+            _logger?.LogInformation($"{nameof(ISteamNews)} provider set to {value.GetType().Name}");
+            _iSteamNews = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the ITeamFortress provider.
+    /// </summary>
+    public ITeamFortress ITeamFortress
+    {
+        get => _iTeamFortress;
+        set
+        {
+            _logger?.LogInformation($"{nameof(ITeamFortress)} provider set to {value.GetType().Name}");
+            _iTeamFortress = value;
+        }
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SteamApiClient"/> class with the specified API key.
+    /// </summary>
+    /// <param name="apiKey">The API key to use for requests.</param>
     public SteamApiClient(string apiKey) : this(apiKey, new SteamApiClientDefaultCacheProvider())
     {
     }
 
-    public SteamApiClient(string apiKey, ISteamApiClientCacheProvider cacheProvider)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SteamApiClient"/> class with the specified API key, cache provider, and logger.
+    /// </summary>
+    /// <param name="apiKey">The API key to use for requests.</param>
+    /// <param name="cacheProvider">The cache provider to use for caching responses.</param>
+    /// <param name="logger">The logger to use for logging information.</param>
+    public SteamApiClient(string apiKey, ISteamApiClientCacheProvider cacheProvider, ILogger<SteamApiClient>? logger = null)
     {
         _apiKey = apiKey;
         _httpClient = new HttpClient { BaseAddress = new Uri("https://api.steampowered.com") };
         _cacheProvider = cacheProvider;
+        _logger = logger;
         ISteamUser = new SteamUserEndpoints(this);
         ISteamUserStats = new SteamUserStatsEndpoints(this);
         ISteamNews = new SteamNewsEndpoints(this);
         ITeamFortress = new TeamFortressEndpoints(this);
     }
 
+    /// <summary>
+    /// Sends a GET request to the specified endpoint and returns the response deserialized to the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type to deserialize the response to.</typeparam>
+    /// <param name="endpoint">The endpoint to send the GET request to.</param>
+    /// <returns>The deserialized response.</returns>
     internal protected async Task<T> GetAsync<T>(string endpoint)
     {
         var url = $"{endpoint}&key={_apiKey}&l={Language}";
