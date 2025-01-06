@@ -1,15 +1,16 @@
 ﻿using System.Text.Json;
 
 namespace SteamWebSharp;
+
 internal class Utils
 {
-    private static readonly JsonSerializerOptions _options = new JsonSerializerOptions
+    private static readonly JsonSerializerOptions _options = new()
     {
         PropertyNameCaseInsensitive = true
     };
 
     /// <summary>
-    /// Extracts the "response" object from a Steam API response and deserializes it into the specified type.
+    ///     Extracts the "response" object from a Steam API response and deserializes it into the specified type.
     /// </summary>
     /// <typeparam name="T">The type to deserialize the response object into.</typeparam>
     /// <param name="json">The raw JSON string from the Steam API.</param>
@@ -20,14 +21,10 @@ internal class Utils
         var root = document.RootElement;
 
         if (root.TryGetProperty("response", out var responseElement))
-        {
             return JsonSerializer.Deserialize<T>(responseElement.GetRawText(), _options);
-        }
 
-        if(root.TryGetProperty("game", out var gameElement))
-        {
+        if (root.TryGetProperty("game", out var gameElement))
             return JsonSerializer.Deserialize<T>(gameElement.GetRawText(), _options);
-        }
 
         return JsonSerializer.Deserialize<T>(root.GetRawText(), _options);
 

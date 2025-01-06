@@ -10,5 +10,4 @@ public class TeamFortressItemAttribute
     public int Quality { get; set; }
     public bool MatchAllAttribs { get; set; }
     public int Itemdef { get; set; }
-    
 }

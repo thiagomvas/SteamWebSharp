@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 
 namespace SteamWebSharp.DTOs.TeamFortress;
 
-
 public class GetPlayerItemsResponse
 {
     public int status { get; set; }
@@ -51,8 +50,7 @@ public class Attributes1Dto
 
 public class EquippedDto
 {
-    [JsonPropertyName("class")]
-    public int _class { get; set; }
+    [JsonPropertyName("class")] public int _class { get; set; }
+
     public int slot { get; set; }
 }
-

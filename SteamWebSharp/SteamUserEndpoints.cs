@@ -1,9 +1,12 @@
 ﻿using SteamWebSharp.DTOs;
-using SteamWebSharp;
 using SteamWebSharp.Interfaces;
 using SteamWebSharp.Models;
 
 namespace SteamWebSharp;
+
+/// <summary>
+/// Default implementation of <see cref="ISteamUser"/>.
+/// </summary>
 public class SteamUserEndpoints : ISteamUser
 {
     private readonly SteamApiClient _client;
@@ -13,22 +16,28 @@ public class SteamUserEndpoints : ISteamUser
         _client = client;
     }
 
+    /// <inheritdoc />
     public async Task<ulong> ResolveVanityURLAsync(string vanityUrl)
     {
-        var result = await _client.GetAsync<ResolveVanityURLResponse>($"/ISteamUser/ResolveVanityURL/v1/?vanityurl={vanityUrl}");
+        var result =
+            await _client.GetAsync<ResolveVanityURLResponse>($"/ISteamUser/ResolveVanityURL/v1/?vanityurl={vanityUrl}");
         return ulong.Parse(result.SteamId);
     }
 
-    public async Task<PlayerBans> GetPlayerBansAsync(ulong steamId)
+    /// <inheritdoc />
+    public async Task<PlayerBans?> GetPlayerBansAsync(ulong steamId)
     {
         var result = await _client.GetAsync<GetPlayerBansResponse>($"/ISteamUser/GetPlayerBans/v1/?steamids={steamId}");
         var player = result.Players.FirstOrDefault();
         return player != null ? MapPlayerBans(player) : null;
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<Friend>> GetFriendListAsync(ulong steamId)
     {
-        var result = await _client.GetAsync<GetFriendListResponse>($"/ISteamUser/GetFriendList/v1/?steamid={steamId}&relationship=friend");
+        var result =
+            await _client.GetAsync<GetFriendListResponse>(
+                $"/ISteamUser/GetFriendList/v1/?steamid={steamId}&relationship=friend");
         return result.Friends.Select(f => new Friend
         {
             SteamId = f.steamid,
@@ -37,28 +46,39 @@ public class SteamUserEndpoints : ISteamUser
         });
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<Group>> GetUserGroupListAsync(ulong steamId)
     {
-        var result = await _client.GetAsync<GetUserGroupListResponse>($"/ISteamUser/GetUserGroupList/v1/?steamid={steamId}");
+        var result =
+            await _client.GetAsync<GetUserGroupListResponse>($"/ISteamUser/GetUserGroupList/v1/?steamid={steamId}");
         return result.Groups.Select(g => new Group { Gid = ulong.Parse(g.Gid) });
     }
 
-    public async Task<PlayerSummary> GetPlayerSummariesAsync(ulong steamId)
+    /// <inheritdoc />
+    public async Task<PlayerSummary?> GetPlayerSummariesAsync(ulong steamId)
     {
-        var result = await _client.GetAsync<GetPlayerSummariesResponse>($"/ISteamUser/GetPlayerSummaries/v2/?steamids={steamId}");
+        var result =
+            await _client.GetAsync<GetPlayerSummariesResponse>(
+                $"/ISteamUser/GetPlayerSummaries/v2/?steamids={steamId}");
         var user = result.players.FirstOrDefault();
         return user != null ? MapPlayerSummary(user) : null;
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<PlayerBans>> GetPlayerBansAsync(IEnumerable<ulong> steamIds)
     {
-        var result = await _client.GetAsync<GetPlayerBansResponse>($"/ISteamUser/GetPlayerBans/v1/?steamids={string.Join(",", steamIds)}");
+        var result =
+            await _client.GetAsync<GetPlayerBansResponse>(
+                $"/ISteamUser/GetPlayerBans/v1/?steamids={string.Join(",", steamIds)}");
         return result.Players.Select(MapPlayerBans);
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<PlayerSummary>> GetPlayerSummariesAsync(IEnumerable<ulong> steamIds)
     {
-        var result = await _client.GetAsync<GetPlayerSummariesResponse>($"/ISteamUser/GetPlayerSummaries/v2/?steamids={string.Join(",", steamIds)}");
+        var result =
+            await _client.GetAsync<GetPlayerSummariesResponse>(
+                $"/ISteamUser/GetPlayerSummaries/v2/?steamids={string.Join(",", steamIds)}");
         return result.players.Select(MapPlayerSummary);
     }
 

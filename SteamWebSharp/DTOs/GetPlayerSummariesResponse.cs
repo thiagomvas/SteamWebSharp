@@ -1,8 +1,10 @@
 ﻿namespace SteamWebSharp.DTOs;
+
 internal class GetPlayerSummariesResponse
 {
     public PlayerSummariesDTO[] players { get; set; }
 }
+
 public record PlayerSummariesDTO
 {
     public string steamid { get; set; }

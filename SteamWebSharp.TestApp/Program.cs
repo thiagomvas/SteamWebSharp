@@ -1,16 +1,13 @@
-﻿using SteamWebSharp;
+﻿using Microsoft.Extensions.Logging;
+using SteamWebSharp;
 
-var apikey = File.ReadAllText("/home/thiagomv/.steamapikey").Replace("\n", "");;
+var apikey = File.ReadAllText("/home/thiagomv/.steamapikey").Replace("\n", "");
+;
+var client = new SteamApiClientBuilder()
+    .WithApiKey(apikey)
+    .AddHttpClient(client => client.Timeout = TimeSpan.FromSeconds(30))
+    .AddLogging(builder => builder.AddConsole())
+    .Build();
 
-var client = new SteamApiClient(apikey);
-
-var news = await client.ISteamNews.GetNewsForAppAsync(440);
-
-foreach(var item in news.NewsItems)
-{
-    Console.WriteLine(item.Title);
-    Console.WriteLine(item.Url);
-    Console.WriteLine(item.Author);
-    Console.WriteLine(item.Contents);
-    Console.WriteLine();
-}
+var summary = await client.ISteamUser.GetPlayerSummariesAsync(76561198379450830);
+Console.WriteLine(summary);

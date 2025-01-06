@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
 
 namespace SteamWebSharp;
+
 public class SteamApiClientDefaultCacheProvider : ISteamApiClientCacheProvider
 {
     private readonly ConcurrentDictionary<string, CacheItem> _cache = new();
+
     public T? Get<T>(string key)
     {
         if (_cache.TryGetValue(key, out var item))
         {
-            if (item.Expiration > DateTime.UtcNow)
-            {
-                return (T)item.Value;
-            }
-            else
-            {
-                _cache.TryRemove(key, out _);
-            }
+            if (item.Expiration > DateTime.UtcNow) return (T)item.Value;
+
+            _cache.TryRemove(key, out _);
         }
+
         return default;
     }
 

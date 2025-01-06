@@ -12,14 +12,15 @@ public class TeamFortressEndpoints : ITeamFortress
     {
         _client = client;
     }
+
     public async Task<IEnumerable<GetPlayerItemsResponse>> GetPlayerItemsAsync(ulong steamId)
     {
-        var url = $"/IEconItems_440/GetPlayerItems/v1/?steamid=76561198379450830";
+        var url = "/IEconItems_440/GetPlayerItems/v1/?steamid=76561198379450830";
         var response = await _client.GetAsync<GetPlayerItemsResponse>(url);
         return [response];
         var result = response.items.Select(i =>
         {
-            return new TeamFortressPlayerItem()
+            return new TeamFortressPlayerItem
             {
                 Id = i.id,
                 OriginalId = i.original_id,
@@ -33,7 +34,7 @@ public class TeamFortressEndpoints : ITeamFortress
                 Origin = i.origin,
                 Attributes = i.attributes.Select(a =>
                 {
-                    return new TeamFortressItemAttribute()
+                    return new TeamFortressItemAttribute
                     {
                         Defindex = a.defindex,
                         Value = a.value,

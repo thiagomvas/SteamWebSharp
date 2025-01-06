@@ -1,8 +1,8 @@
 ﻿namespace SteamWebSharp.DTOs;
+
 internal class GetPlayerBansResponse
 {
     public PlayerBansDto[] Players { get; set; }
-
 }
 
 internal class PlayerBansDto

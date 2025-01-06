@@ -27,4 +27,3 @@ public class NewsitemDto
     public int appid { get; set; }
     public string[] tags { get; set; }
 }
-

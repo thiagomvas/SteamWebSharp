@@ -1,4 +1,5 @@
 ﻿namespace SteamWebSharp.Models;
+
 public enum ProfileState
 {
     Offline = 0,

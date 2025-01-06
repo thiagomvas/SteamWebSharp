@@ -4,6 +4,9 @@ using SteamWebSharp.Models;
 
 namespace SteamWebSharp;
 
+/// <summary>
+/// Default implementation of <see cref="ISteamNews"/>
+/// </summary>
 public class SteamNewsEndpoints : ISteamNews
 {
     private readonly SteamApiClient _client;
@@ -12,26 +15,28 @@ public class SteamNewsEndpoints : ISteamNews
     {
         _client = client;
     }
+
+    /// <inheritdoc />
     public async Task<SteamNews> GetNewsForAppAsync(uint appId, uint count = 0, uint maxLength = 0, uint endDate = 0)
     {
         var url = $"/ISteamNews/GetNewsForApp/v2/?appid={appId}";
-        if(count > 0)
+        if (count > 0)
             url += $"&count={count}";
-        
-        if(maxLength > 0)
+
+        if (maxLength > 0)
             url += $"&maxlength={maxLength}";
-        
-        if(endDate > 0)
+
+        if (endDate > 0)
             url += $"&enddate={endDate}";
-        
+
         var response = await _client.GetAsync<GetNewsForAppResponse>(url);
 
-        var result = new SteamNews()
+        var result = new SteamNews
         {
             AppId = response.appnews.appid,
             NewsItems = response.appnews.newsitems.Select(ni =>
             {
-                return new NewsItem()
+                return new NewsItem
                 {
                     Gid = ulong.Parse(ni.gid),
                     Title = ni.title,
@@ -42,7 +47,7 @@ public class SteamNewsEndpoints : ISteamNews
                     FeedLabel = ni.feedlabel,
                     Date = DateTimeOffset.FromUnixTimeSeconds(ni.date).DateTime,
                     FeedName = ni.feedname,
-                    FeedType = ni.feed_type,
+                    FeedType = ni.feed_type
                 };
             }).ToList()
         };

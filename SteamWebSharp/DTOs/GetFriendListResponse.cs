@@ -1,4 +1,5 @@
 ﻿namespace SteamWebSharp.DTOs;
+
 internal class GetFriendListResponse
 {
     public FriendDto[] Friends { get; set; }
