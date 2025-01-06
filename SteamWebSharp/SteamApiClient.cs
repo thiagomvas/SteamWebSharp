@@ -42,6 +42,7 @@ public class SteamApiClient
     public ISteamUserStats ISteamUserStats { get; }
     
     public ISteamNews ISteamNews { get; }
+    public ITeamFortress ITeamFortress { get; }
     public SteamApiClient(string apiKey) : this(apiKey, new SteamApiClientDefaultCacheProvider())
     {
     }
@@ -54,6 +55,7 @@ public class SteamApiClient
         ISteamUser = new SteamUserEndpoints(this);
         ISteamUserStats = new SteamUserStatsEndpoints(this);
         ISteamNews = new SteamNewsEndpoints(this);
+        ITeamFortress = new TeamFortressEndpoints(this);
     }
 
     internal protected async Task<T> GetAsync<T>(string endpoint)
