@@ -1,5 +1,6 @@
 using SteamWebSharp.DTOs;
 using SteamWebSharp.Interfaces;
+using SteamWebSharp.Models;
 
 namespace SteamWebSharp;
 

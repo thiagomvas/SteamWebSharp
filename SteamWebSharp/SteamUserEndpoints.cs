@@ -1,6 +1,7 @@
 ﻿using SteamWebSharp.DTOs;
 using SteamWebSharp;
 using SteamWebSharp.Interfaces;
+using SteamWebSharp.Models;
 
 namespace SteamWebSharp;
 public class SteamUserEndpoints : ISteamUser
