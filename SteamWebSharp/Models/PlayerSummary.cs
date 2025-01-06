@@ -1,4 +1,4 @@
-﻿namespace SteamWebSharp;
+﻿namespace SteamWebSharp.Models;
 
 /// <summary>
 /// Represents a player's summary.

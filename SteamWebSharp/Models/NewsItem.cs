@@ -1,4 +1,4 @@
-namespace SteamWebSharp;
+namespace SteamWebSharp.Models;
 
 public class NewsItem
 {

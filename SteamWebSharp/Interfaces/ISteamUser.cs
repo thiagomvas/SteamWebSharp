@@ -1,4 +1,6 @@
-﻿namespace SteamWebSharp.Interfaces;
+﻿using SteamWebSharp.Models;
+
+namespace SteamWebSharp.Interfaces;
 /// <summary>
 /// Represents the interface for interacting with Steam user-related API endpoints.
 /// </summary>

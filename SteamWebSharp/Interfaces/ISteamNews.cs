@@ -1,5 +1,9 @@
-namespace SteamWebSharp.Interfaces;
+using SteamWebSharp.Models;
 
+namespace SteamWebSharp.Interfaces;
+/// <summary>
+/// Represents the interface for interacting with Steam news-related API endpoints.
+/// </summary>
 public interface ISteamNews
 {
     /// <summary>
