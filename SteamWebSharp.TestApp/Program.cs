@@ -1,8 +1,16 @@
 ﻿using SteamWebSharp;
 
-var client = new SteamApiClient("C19C127526046B5F8F9964330C5BEB9F");
+var apikey = File.ReadAllText("/home/thiagomv/.steamapikey").Replace("\n", "");;
 
-var id = await client.ISteamUser.ResolveVanityURLAsync("gaxyhs");
-var result = await client.ISteamUserStats.GetNumberOfCurrentPlayersAsync(648800);
+var client = new SteamApiClient(apikey);
 
-Console.WriteLine(result);
+var news = await client.ISteamNews.GetNewsForAppAsync(440);
+
+foreach(var item in news.NewsItems)
+{
+    Console.WriteLine(item.Title);
+    Console.WriteLine(item.Url);
+    Console.WriteLine(item.Author);
+    Console.WriteLine(item.Contents);
+    Console.WriteLine();
+}

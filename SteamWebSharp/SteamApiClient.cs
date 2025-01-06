@@ -40,6 +40,8 @@ public class SteamApiClient
     /// Endpoints for the ISteamUserStats interface.
     /// </summary>
     public ISteamUserStats ISteamUserStats { get; }
+    
+    public ISteamNews ISteamNews { get; }
     public SteamApiClient(string apiKey) : this(apiKey, new SteamApiClientDefaultCacheProvider())
     {
     }
@@ -51,6 +53,7 @@ public class SteamApiClient
         _cacheProvider = cacheProvider;
         ISteamUser = new SteamUserEndpoints(this);
         ISteamUserStats = new SteamUserStatsEndpoints(this);
+        ISteamNews = new SteamNewsEndpoints(this);
     }
 
     internal protected async Task<T> GetAsync<T>(string endpoint)
