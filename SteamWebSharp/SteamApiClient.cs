@@ -8,19 +8,19 @@ namespace SteamWebSharp;
 /// </summary>
 public class SteamApiClient
 {
-    protected readonly string _apiKey;
     private readonly ISteamApiClientCacheProvider _cacheProvider;
     protected readonly HttpClient _httpClient;
     private readonly ILogger<SteamApiClient>? _logger;
     private ISteamNews _iSteamNews;
     private ISteamUser _iSteamUser;
     private ISteamUserStats _iSteamUserStats;
+    private SteamApiClientConfiguration _configuration;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="SteamApiClient" /> class with the specified API key.
     /// </summary>
     /// <param name="apiKey">The API key to use for requests.</param>
-    public SteamApiClient(string apiKey) : this(apiKey, new SteamApiClientDefaultCacheProvider())
+    public SteamApiClient(SteamApiClientConfiguration configuration) : this(configuration, new SteamApiClientDefaultCacheProvider())
     {
     }
 
@@ -31,41 +31,23 @@ public class SteamApiClient
     /// <param name="apiKey">The API key to use for requests.</param>
     /// <param name="cacheProvider">The cache provider to use for caching responses.</param>
     /// <param name="logger">The logger to use for logging information.</param>
-    public SteamApiClient(string apiKey, ISteamApiClientCacheProvider cacheProvider,
+    public SteamApiClient(SteamApiClientConfiguration configuration, ISteamApiClientCacheProvider cacheProvider,
         ILogger<SteamApiClient>? logger = null)
     {
-        _apiKey = apiKey;
         _httpClient = new HttpClient { BaseAddress = new Uri("https://api.steampowered.com") };
         _cacheProvider = cacheProvider;
         _logger = logger;
+        _configuration = configuration;
         ISteamUser = new SteamUserEndpoints(this);
         ISteamUserStats = new SteamUserStatsEndpoints(this);
         ISteamNews = new SteamNewsEndpoints(this);
     }
-
-    /// <summary>
-    ///     The default duration to cache responses for. Default is 5 minutes.
-    /// </summary>
-    public TimeSpan DefaultCacheDuration { get; set; } = TimeSpan.FromMinutes(5);
-
-    /// <summary>
-    ///     Whether to use the cache. Default is true.
-    /// </summary>
-    public bool UseCache { get; set; } = true;
-
-    /// <summary>
-    ///     The language to use for responses. Default is "english".
-    /// </summary>
-    /// <remarks>
-    ///     This is passed directly as a query parameter to the Steam API. The available languages are defined by the Steam
-    ///     API.
-    /// </remarks>
-    public string Language { get; set; } = "english";
+    
 
     /// <summary>
     ///     Gets the API key.
     /// </summary>
-    internal string ApiKey => _apiKey;
+    internal string ApiKey => _configuration.ApiKey;
 
     /// <summary>
     ///     Gets or sets the ISteamUser provider.
@@ -114,16 +96,37 @@ public class SteamApiClient
     /// <returns>The deserialized response.</returns>
     protected internal async Task<T> GetAsync<T>(string endpoint)
     {
+        int retryCount = 0;
         bool hasParams = endpoint.Contains('?');
-        var url = $"{endpoint}{(hasParams ? "&" : "?")}key={_apiKey}&l={Language}";
+        var url = $"{endpoint}{(hasParams ? "&" : "?")}key={_configuration.ApiKey}&l={_configuration.Language}";
         var cachedResult = _cacheProvider.Get<T>(url);
         if (cachedResult != null) return cachedResult;
-
-        var response = await _httpClient.GetStringAsync(url);
-        var result = Utils.ExtractResponse<T>(response);
-        if (UseCache)
-            _cacheProvider.Set(url, result, DefaultCacheDuration);
-
-        return result;
+    
+        while (true)
+        {
+            try
+            {
+                var response = await _httpClient.GetStringAsync(url);
+                var result = Utils.ExtractResponse<T>(response);
+                if (_configuration.UseCache)
+                    _cacheProvider.Set(url, result, _configuration.DefaultCacheDuration);
+    
+                return result;
+            }
+            catch (Exception ex) when (retryCount < _configuration.RetryAttempts)
+            {
+                retryCount++;
+                _logger?.LogWarning(ex, "Failed to get response from {Url}. Retrying... ({RetryCount}/{MaxRetries})", 
+                    url, 
+                    retryCount, 
+                    _configuration.RetryAttempts);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to get response from {Url}.", url);
+                throw; 
+            }
+        }
     }
+
 }

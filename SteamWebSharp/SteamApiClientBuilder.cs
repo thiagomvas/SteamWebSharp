@@ -128,12 +128,7 @@ public class SteamApiClientBuilder
                             new SteamApiClientDefaultCacheProvider();
         var logger = provider.GetService<ILogger<SteamApiClient>>();
 
-        var client = new SteamApiClient(Configuration.ApiKey, cacheProvider, logger)
-        {
-            UseCache = Configuration.UseCache,
-            DefaultCacheDuration = Configuration.DefaultCacheDuration,
-            Language = Configuration.Language
-        };
+        var client = new SteamApiClient(Configuration, cacheProvider, logger);
 
         var iSteamUser = provider.GetService<ISteamUser>() ?? new SteamUserEndpoints(client);
         var iSteamUserStats = provider.GetService<ISteamUserStats>() ?? new SteamUserStatsEndpoints(client);
