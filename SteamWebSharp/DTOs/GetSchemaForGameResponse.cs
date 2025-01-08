@@ -7,13 +7,13 @@ internal class GetSchemaForGameResponse
     public AvailableGameStatsDto AvailableGameStats { get; set; }
 }
 
-public class AvailableGameStatsDto
+internal class AvailableGameStatsDto
 {
     public GameAchievementDto[] Achievements { get; set; }
     public GameStatDto[] Stats { get; set; }
 }
 
-public class GameAchievementDto
+internal class GameAchievementDto
 {
     public string Name { get; set; }
     public string DisplayName { get; set; }
@@ -24,7 +24,7 @@ public class GameAchievementDto
     public int DefaultValue { get; set; }
 }
 
-public class GameStatDto
+internal class GameStatDto
 {
     public string Name { get; set; }
     public string DisplayName { get; set; }

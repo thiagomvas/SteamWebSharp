@@ -1,18 +1,18 @@
 namespace SteamWebSharp.DTOs;
 
-public class GetNewsForAppResponse
+internal class GetNewsForAppResponse
 {
     public AppnewsDto appnews { get; set; }
 }
 
-public class AppnewsDto
+internal class AppnewsDto
 {
     public int appid { get; set; }
     public NewsitemDto[] newsitems { get; set; }
     public int count { get; set; }
 }
 
-public class NewsitemDto
+internal class NewsitemDto
 {
     public string gid { get; set; }
     public string title { get; set; }

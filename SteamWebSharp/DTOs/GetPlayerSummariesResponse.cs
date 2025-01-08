@@ -5,7 +5,7 @@ internal class GetPlayerSummariesResponse
     public PlayerSummariesDTO[] players { get; set; }
 }
 
-public record PlayerSummariesDTO
+internal record PlayerSummariesDTO
 {
     public string steamid { get; set; }
     public int communityvisibilitystate { get; set; }
