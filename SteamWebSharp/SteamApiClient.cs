@@ -15,7 +15,6 @@ public class SteamApiClient
     private ISteamNews _iSteamNews;
     private ISteamUser _iSteamUser;
     private ISteamUserStats _iSteamUserStats;
-    private ITeamFortress _iTeamFortress;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="SteamApiClient" /> class with the specified API key.
@@ -42,7 +41,6 @@ public class SteamApiClient
         ISteamUser = new SteamUserEndpoints(this);
         ISteamUserStats = new SteamUserStatsEndpoints(this);
         ISteamNews = new SteamNewsEndpoints(this);
-        ITeamFortress = new TeamFortressEndpoints(this);
     }
 
     /// <summary>
@@ -109,19 +107,6 @@ public class SteamApiClient
     }
 
     /// <summary>
-    ///     Gets or sets the ITeamFortress provider.
-    /// </summary>
-    public ITeamFortress ITeamFortress
-    {
-        get => _iTeamFortress;
-        set
-        {
-            _logger?.LogInformation($"{nameof(ITeamFortress)} provider set to {value.GetType().Name}");
-            _iTeamFortress = value;
-        }
-    }
-
-    /// <summary>
     ///     Sends a GET request to the specified endpoint and returns the response deserialized to the specified type.
     /// </summary>
     /// <typeparam name="T">The type to deserialize the response to.</typeparam>
@@ -129,7 +114,8 @@ public class SteamApiClient
     /// <returns>The deserialized response.</returns>
     protected internal async Task<T> GetAsync<T>(string endpoint)
     {
-        var url = $"{endpoint}&key={_apiKey}&l={Language}";
+        bool hasParams = endpoint.Contains('?');
+        var url = $"{endpoint}{(hasParams ? "&" : "?")}key={_apiKey}&l={Language}";
         var cachedResult = _cacheProvider.Get<T>(url);
         if (cachedResult != null) return cachedResult;
 

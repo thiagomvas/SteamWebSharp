@@ -8,6 +8,3 @@ var client = new SteamApiClientBuilder()
     .AddHttpClient(client => client.Timeout = TimeSpan.FromSeconds(30))
     .AddLogging(builder => builder.AddConsole())
     .Build();
-
-var summary = await client.ISteamUser.GetPlayerSummariesAsync(76561198379450830);
-Console.WriteLine(summary);
