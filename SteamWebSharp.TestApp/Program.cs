@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using SteamWebSharp;
+using SteamWebSharp.Models.Market;
 
 var apikey = File.ReadAllText("/home/thiagomv/.steamapikey").Replace("\n", "");
-;
+
 var builder = new SteamApiClientBuilder()
     .WithApiKey(apikey)
     .AddHttpClient(client => client.Timeout = TimeSpan.FromSeconds(30))
@@ -10,8 +11,11 @@ var builder = new SteamApiClientBuilder()
     {
         builder.AddConsole().SetMinimumLevel(LogLevel.Trace);
     });
-builder.Configuration.RetryAttempts = 3;
 var client = builder.Build();
-var summary = await client.ISteamUser.GetPlayerSummariesAsync(0);
 
-Console.WriteLine(summary.PersonaName);
+var search = await client.ISteamMarket.SearchMarketAsync(440, "Mann Co. Supply Crate Key", 3, true);
+
+foreach (var res in search.Results)
+{
+    Console.WriteLine(res.HashName);
+}

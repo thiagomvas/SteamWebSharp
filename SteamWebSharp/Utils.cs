@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using SteamWebSharp.Converters;
 
 namespace SteamWebSharp;
 
@@ -6,7 +7,11 @@ internal class Utils
 {
     private static readonly JsonSerializerOptions _options = new()
     {
-        PropertyNameCaseInsensitive = true
+        PropertyNameCaseInsensitive = true,
+        Converters =
+        {
+            new PriceRecordConverter(),
+        }
     };
 
     /// <summary>

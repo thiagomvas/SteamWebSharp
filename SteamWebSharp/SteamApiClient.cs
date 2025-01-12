@@ -11,9 +11,11 @@ public class SteamApiClient
     private readonly ISteamApiClientCacheProvider _cacheProvider;
     protected readonly HttpClient _httpClient;
     private readonly ILogger<SteamApiClient>? _logger;
+    private string _authCookie;
     private ISteamNews _iSteamNews;
     private ISteamUser _iSteamUser;
     private ISteamUserStats _iSteamUserStats;
+    private ISteamMarket _iSteamMarket;
     private SteamApiClientConfiguration _configuration;
 
     /// <summary>
@@ -41,6 +43,7 @@ public class SteamApiClient
         ISteamUser = new SteamUserEndpoints(this);
         ISteamUserStats = new SteamUserStatsEndpoints(this);
         ISteamNews = new SteamNewsEndpoints(this);
+        ISteamMarket = new SteamMarketEndpoints(this);
     }
     
 
@@ -87,6 +90,33 @@ public class SteamApiClient
             _iSteamNews = value;
         }
     }
+    
+    public ISteamMarket ISteamMarket
+    {
+        get => _iSteamMarket;
+        set
+        {
+            _logger?.LogInformation($"{nameof(ISteamMarket)} provider set to {value.GetType().Name}");
+            _iSteamMarket = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the authentication cookie to use for requests.
+    /// </summary>
+    /// <remarks>
+    /// This is sensitive information and should be kept secure, be careful when setting this value to avoid leaking it.
+    /// </remarks>
+    public string AuthCookie
+    {
+        get => _authCookie;
+        set
+        {
+            _authCookie = value;
+            _httpClient.DefaultRequestHeaders.Remove("Cookie");
+            _httpClient.DefaultRequestHeaders.Add("Cookie", value);
+        }
+    }
 
     /// <summary>
     ///     Sends a GET request to the specified endpoint and returns the response deserialized to the specified type.
@@ -94,11 +124,11 @@ public class SteamApiClient
     /// <typeparam name="T">The type to deserialize the response to.</typeparam>
     /// <param name="endpoint">The endpoint to send the GET request to.</param>
     /// <returns>The deserialized response.</returns>
-    protected internal async Task<T> GetAsync<T>(string endpoint)
+    protected internal async Task<T> GetAsync<T>(string endpoint, bool authed = true)
     {
         int retryCount = 0;
         bool hasParams = endpoint.Contains('?');
-        var url = $"{endpoint}{(hasParams ? "&" : "?")}key={_configuration.ApiKey}&l={_configuration.Language}";
+        var url = authed ? $"{endpoint}{(hasParams ? "&" : "?")}key={_configuration.ApiKey}&l={_configuration.Language}" : endpoint;
         var cachedResult = _cacheProvider.Get<T>(url);
         if (cachedResult != null) return cachedResult;
     
