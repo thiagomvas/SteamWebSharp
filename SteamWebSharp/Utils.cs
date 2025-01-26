@@ -11,6 +11,7 @@ internal class Utils
         Converters =
         {
             new PriceRecordConverter(),
+            new UnixTimestampConverter()
         }
     };
 
@@ -46,5 +47,25 @@ internal class Utils
         //}
 
         //throw new InvalidOperationException("The response object is missing or invalid.");
+    }
+
+    public static T ExtractResponse<T>(string json, string propertyPath = "")
+    {
+        if (string.IsNullOrWhiteSpace(propertyPath))
+            return ExtractResponse<T>(json);
+        using var document = JsonDocument.Parse(json);
+        var root = document.RootElement;
+        JsonElement current;
+        var props = propertyPath.Split('/');
+        
+        for (var i = 0; i < props.Length; i++)
+        {
+            if (root.TryGetProperty(props[i], out current))
+                root = current;
+            else
+                throw new InvalidOperationException($"The property path {propertyPath} is invalid.");
+        }
+        
+        return JsonSerializer.Deserialize<T>(root.GetRawText(), _options);
     }
 }

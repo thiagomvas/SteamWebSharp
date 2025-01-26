@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using SteamWebSharp.Interfaces;
+using SteamWebSharp.Models;
 
 namespace SteamWebSharp;
 
@@ -16,6 +17,7 @@ public class SteamApiClient
     private ISteamUser _iSteamUser;
     private ISteamUserStats _iSteamUserStats;
     private ISteamMarket _iSteamMarket;
+    private IPlayerService _iPlayerService;
     private SteamApiClientConfiguration _configuration;
 
     /// <summary>
@@ -44,6 +46,7 @@ public class SteamApiClient
         ISteamUserStats = new SteamUserStatsEndpoints(this);
         ISteamNews = new SteamNewsEndpoints(this);
         ISteamMarket = new SteamMarketEndpoints(this);
+        IPlayerService = new PlayerServiceEndpoints(this);
     }
     
 
@@ -91,6 +94,9 @@ public class SteamApiClient
         }
     }
     
+    /// <summary>
+    /// Gets or sets the ISteamMarket provider.
+    /// </summary>
     public ISteamMarket ISteamMarket
     {
         get => _iSteamMarket;
@@ -98,6 +104,19 @@ public class SteamApiClient
         {
             _logger?.LogInformation($"{nameof(ISteamMarket)} provider set to {value.GetType().Name}");
             _iSteamMarket = value;
+        }
+    }
+    
+    /// <summary>
+    /// Gets or sets the IPlayerService provider.
+    /// </summary>
+    public IPlayerService IPlayerService
+    {
+        get => _iPlayerService;
+        set
+        {
+            _logger?.LogInformation($"{nameof(IPlayerService)} provider set to {value.GetType().Name}");
+            _iPlayerService = value;
         }
     }
 
@@ -124,7 +143,9 @@ public class SteamApiClient
     /// <typeparam name="T">The type to deserialize the response to.</typeparam>
     /// <param name="endpoint">The endpoint to send the GET request to.</param>
     /// <returns>The deserialized response.</returns>
-    protected internal async Task<T> GetAsync<T>(string endpoint, bool authed = true)
+    protected internal Task<T> GetAsync<T>(string endpoint, bool authed = true) => GetAsync<T>(endpoint, "", authed);
+
+    protected internal async Task<T> GetAsync<T>(string endpoint, string propertyPath, bool authed = true)
     {
         int retryCount = 0;
         bool hasParams = endpoint.Contains('?');
@@ -137,7 +158,7 @@ public class SteamApiClient
             try
             {
                 var response = await _httpClient.GetStringAsync(url);
-                var result = Utils.ExtractResponse<T>(response);
+                var result = Utils.ExtractResponse<T>(response, propertyPath);
                 if (_configuration.UseCache)
                     _cacheProvider.Set(url, result, _configuration.DefaultCacheDuration);
     
