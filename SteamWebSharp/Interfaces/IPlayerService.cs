@@ -14,4 +14,16 @@ public interface IPlayerService
     /// <param name="includeExtendedAppInfo"><see langword="true"/> even more details (capsule, sortas, and capabilities) about each game. <paramref name="includeAppInfo"/> must also be <see langword="true"/>.</param>
     /// <returns>A list of owned games</returns>
     Task<IEnumerable<OwnedGame>> GetOwnedGamesAsync(ulong steamId, bool includeAppInfo = true, bool includePlayedFreeGames = false, bool includeFreeSub = false, bool includeExtendedAppInfo = false);
+    
+    /// <summary>
+    /// Gets the last played times for the account.
+    /// </summary>
+    /// <param name="steamId">The user to fetch the last played times of</param>
+    /// <param name="minLastPlayedTime">The most recent last-played time the client already knows about</param>
+    /// <returns>A list of the last played times for the account</returns>
+    Task<IEnumerable<LastPlayedTime>> GetLastPlayedTimesAsync(ulong steamId, int minLastPlayedTime = 0);
+    
+    Task<IEnumerable<OwnedGame>> GetRecentlyPlayedAsync(ulong steamId, int count = -1);
+    
+    
 }

@@ -16,6 +16,7 @@ public class PlayerServiceEndpoints : IPlayerService
         bool includeFreeSub = false, bool includeExtendedAppInfo = false)
     {
         var url = $"IPlayerService/GetOwnedGames/v1/?steamid={steamId}&include_appinfo={includeAppInfo}&include_played_free_games={includePlayedFreeGames}&include_free_sub={includeFreeSub}&include_extended_info={includeExtendedAppInfo}";
+        return await _client.GetAsync<IEnumerable<OwnedGame>>(url, "response/games");
         var response = await _client.GetAsync<GetOwnedGamesResponse>(url);
         
         return response.games.Select(game => new OwnedGame
@@ -38,5 +39,21 @@ public class PlayerServiceEndpoints : IPlayerService
             HasLeaderboards = game.has_leaderboards,
             Playtime2Weeks = game.playtime_2weeks
         });
+    }
+
+    public async Task<IEnumerable<LastPlayedTime>> GetLastPlayedTimesAsync(ulong steamId, int minLastPlayedTime = 0)
+    {
+        var url = $"IPlayerService/ClientGetLastPlayedTimes/v1/?key=A227FB5747B8B23208587AF679574C42&min_last_played=0";
+        return await _client.GetAsync<IEnumerable<LastPlayedTime>>(url, "response/games");
+        
+    }
+
+    public async Task<IEnumerable<OwnedGame>> GetRecentlyPlayedAsync(ulong steamId, int count = -1)
+    {
+        var url = $"IPlayerService/GetRecentlyPlayedGames/v1/?steamid={steamId}";
+        if (count > 0)
+            url += $"&count={count}";
+        
+        return await _client.GetAsync<IEnumerable<OwnedGame>>(url, "response/games");
     }
 }
