@@ -13,6 +13,8 @@ public class SteamApiClientBuilder
     private ISteamNews _iSteamNews;
     private ISteamUser _iSteamUser;
     private ISteamUserStats _iSteamUserStats;
+    private ISteamMarket _iSteamMarket;
+    private IPlayerService _iPlayerService;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="SteamApiClientBuilder" /> class.
@@ -89,6 +91,34 @@ public class SteamApiClientBuilder
     public SteamApiClientBuilder UseISteamUserStatsProvider(ISteamUserStats iSteamUserStats)
     {
         _services.AddSingleton<ISteamUserStats>(iSteamUserStats);
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the <see cref="ISteamMarket" /> provider.
+    /// </summary>
+    /// <param name="iSteamMarket">
+    /// The <see cref="ISteamMarket" /> provider.
+    /// </param>
+    /// <returns>The current <see cref="SteamApiClientBuilder" /> instance.</returns>
+    public SteamApiClientBuilder UseISteamMarketProvider(ISteamMarket iSteamMarket)
+    {
+        _services.AddSingleton<ISteamMarket>(iSteamMarket);
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the <see cref="IPlayerService" /> provider.
+    /// </summary>
+    /// <param name="iPlayerService">
+    /// The <see cref="IPlayerService" /> provider.
+    /// </param>
+    /// <returns>
+    /// The current <see cref="SteamApiClientBuilder" /> instance.
+    /// </returns>
+    public SteamApiClientBuilder UseIPlayerServiceProvider(IPlayerService iPlayerService)
+    {
+        _services.AddSingleton<IPlayerService>(iPlayerService);
         return this;
     }
 
