@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.1.1"></a>
+## [1.1.1](https://www.github.com/thiagomvas/SteamWebSharp/releases/tag/v1.1.1) (2025-09-10)
+
+### Bug Fixes
+
+* GetGlobalAchievementPercentages correctly parses the response ([efe5c17](https://www.github.com/thiagomvas/SteamWebSharp/commit/efe5c17126806424287b193765dc464c075f1a43))
+
 <a name="1.1.0"></a>
 ## [1.1.0](https://www.github.com/thiagomvas/SteamWebSharp/releases/tag/v1.1.0) (2025-09-10)
 
