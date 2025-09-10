@@ -13,5 +13,5 @@ internal class AchievementPercentages
 internal class AchievementPercentageDto
 {
     public string name { get; set; }
-    public double percent { get; set; }
+    public string percent { get; set; }
 }

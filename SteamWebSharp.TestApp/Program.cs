@@ -13,9 +13,7 @@ var builder = new SteamApiClientBuilder()
     });
 var client = builder.Build();
 
-var search = await client.ISteamMarket.SearchMarketAsync(440, "Mann Co. Supply Crate Key", 3, true);
+var percentages = await client.ISteamUserStats.GetGlobalAchievementPercentagesForAppAsync(264710);
 
-foreach (var res in search.Results)
-{
-    Console.WriteLine(res.HashName);
-}
+// log as json
+Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(percentages, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));

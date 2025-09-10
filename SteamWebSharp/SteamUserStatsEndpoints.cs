@@ -22,7 +22,7 @@ internal class SteamUserStatsEndpoints : ISteamUserStats
         var url = $"/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2?gameid={appId}";
         var response = await _client.GetAsync<GetGlobalAchievementPercentagesForAppResponse>(url);
         return response.AchievementPercentages.achievements.Select(a => new AchievementPercentage
-            { ApiName = a.name, Percentage = a.percent });
+            { ApiName = a.name, Percentage = double.Parse(a.percent) });
     }
 
     /// <inheritdoc />
