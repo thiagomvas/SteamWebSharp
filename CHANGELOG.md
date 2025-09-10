@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.1.0"></a>
+## [1.1.0](https://www.github.com/thiagomvas/SteamWebSharp/releases/tag/v1.1.0) (2025-09-10)
+
+### Features
+
+* Add base IPlayerService interface with GetOwnedGames endpoint ([b7db8a2](https://www.github.com/thiagomvas/SteamWebSharp/commit/b7db8a207ccfa4eef5ce5c185125a9b52f16942e))
+* Add IPlayerService/GetLastPlayedTimes and IPlayerService/GetRecentlyPlayed ([4814b43](https://www.github.com/thiagomvas/SteamWebSharp/commit/4814b432ac3cabca15b00ceaff1eca5168378bc8))
+
+### Bug Fixes
+
+* Add missing ISteamMarket setter for builder ([207a31e](https://www.github.com/thiagomvas/SteamWebSharp/commit/207a31ed21b7eae0605800f8971fdae7c4e5a2cd))
+
 <a name="1.0.0"></a>
 ## [1.0.0](https://www.github.com/thiagomvas/SteamWebSharp/releases/tag/v1.0.0) (2025-01-12)
 

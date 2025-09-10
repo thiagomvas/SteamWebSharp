@@ -8,7 +8,7 @@
         <Description>A Steam Web API Wrapper where each point is its own interface. Supports Retrying on fail, Caching with a custom provider interface, Logging through ILogger and more</Description>
         <PackageProjectUrl>https://github.com/thiagomvas/SteamWebSharp</PackageProjectUrl>
         <RepositoryUrl>https://github.com/thiagomvas/SteamWebSharp</RepositoryUrl>
-        <Version>1.0.0</Version>
+        <Version>1.1.0</Version>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
