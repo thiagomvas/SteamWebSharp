@@ -13,7 +13,7 @@ var builder = new SteamApiClientBuilder()
     });
 var client = builder.Build();
 
-var percentages = await client.ISteamUserStats.GetGlobalAchievementPercentagesForAppAsync(264710);
+var result = await client.ISteamUserStats.GetSchemaForGameAsync(881100);
 
 // log as json
-Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(percentages, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(result, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));

@@ -56,9 +56,8 @@ internal class SteamUserStatsEndpoints : ISteamUserStats
         {
             Name = response.GameName,
             Version = response.GameVersion,
-            Achievements = response.AvailableGameStats.Achievements.Select(a =>
-            {
-                return new GameAchievement
+            Achievements = response.AvailableGameStats?.Achievements
+                ?.Select(a => new GameAchievement
                 {
                     ApiName = a.Name,
                     DisplayName = a.DisplayName,
@@ -66,17 +65,17 @@ internal class SteamUserStatsEndpoints : ISteamUserStats
                     Icon = a.Icon,
                     IconGray = a.IconGray,
                     IsHidden = a.Hidden == 1
-                };
-            }).ToArray(),
-            Stats = response.AvailableGameStats.Stats.Select(s =>
-            {
-                return new GameStat
+                })
+                .ToArray() ?? [],
+
+            Stats = response.AvailableGameStats?.Stats
+                ?.Select(s => new GameStat
                 {
                     ApiName = s.Name,
                     DisplayName = s.DisplayName,
                     DefaultValue = s.DefaultValue
-                };
-            }).ToArray()
+                })
+                .ToArray() ?? []
         };
     }
 
