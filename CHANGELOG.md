@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.1.2"></a>
+## [1.1.2](https://www.github.com/thiagomvas/SteamWebSharp/releases/tag/v1.1.2) (2025-09-10)
+
+### Bug Fixes
+
+* No longer crash when game schema returns no stats ([9714315](https://www.github.com/thiagomvas/SteamWebSharp/commit/9714315669b47f241ac2ddffe1fe86419828ad37))
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://www.github.com/thiagomvas/SteamWebSharp/releases/tag/v1.1.1) (2025-09-10)
 
